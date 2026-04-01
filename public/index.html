@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Pharmexx Travel</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080d14;--surface:#0e1520;--surface2:#131c2b;--border:#1e2d42;--border2:#263548;--accent:#e63329;--accent2:#ff6b35;--green:#00d4aa;--yellow:#f5c518;--text:#e8edf5;--text2:#8899aa;--text3:#4a5a6e}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.app{max-width:820px;margin:0 auto;padding:24px 16px 100px}
+.app-header{display:flex;align-items:center;gap:14px;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.logo-box{background:#0a1520;border-radius:8px;padding:8px 14px;border:1px solid #1e2d42;flex-shrink:0}
+.logo-main{font-family:Georgia,serif;font-size:20px;color:#fff;letter-spacing:-.5px}
+.logo-dot{width:9px;height:9px;background:#e63329;border-radius:50%;display:inline-block;margin-left:1px;vertical-align:super}
+.logo-sub{font-size:8px;color:#8899aa;letter-spacing:2px;text-transform:uppercase;margin-top:2px}
+.app-title{border-left:1px solid var(--border);padding-left:14px}
+.app-title h1{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text)}
+.app-title p{font-size:11px;color:var(--text2);margin-top:2px}
+.status-pill{margin-left:auto;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.25);color:var(--green);font-size:10px;padding:4px 10px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase}
+.steps{display:flex;margin-bottom:28px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.step{flex:1;padding:12px 8px;display:flex;align-items:center;gap:8px;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;right:0;top:25%;height:50%;width:1px;background:var(--border)}
+.step.active{background:rgba(230,51,41,.08)}
+.step-num{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text2);flex-shrink:0}
+.step.active .step-num{background:var(--accent);border-color:var(--accent);color:#fff}
+.step.done .step-num{background:var(--green);border-color:var(--green);color:#000}
+.step-info{display:flex;flex-direction:column}
+.step-lbl{font-size:10px;font-weight:600;color:var(--text)}
+.step-sub{font-size:9px;color:var(--text3)}
+.step.active .step-lbl{color:var(--accent)}
+.section{display:none}.section.active{display:block}
+.sec-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.sec-title::before{content:'';width:4px;height:16px;background:var(--accent);border-radius:2px;flex-shrink:0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px}
+.card-title{font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.card-title-left{display:flex;align-items:center;gap:6px}
+.card-title-left::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g-full{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.6px}
+.field input,.field select,.field textarea{background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 13px;outline:none;width:100%;-webkit-appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+.field input::placeholder,.field textarea::placeholder{color:var(--text3)}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238899aa' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;background-color:var(--surface2)}
+.field textarea{resize:vertical;min-height:80px}
+.req{color:var(--accent)}
+.tog-group{display:flex;flex-wrap:wrap;gap:8px}
+.tog-btn{padding:9px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;-webkit-appearance:none}
+.tog-btn.sel{background:rgba(230,51,41,.12);border-color:var(--accent);color:var(--accent);font-weight:600}
+.hot-tog{display:flex;border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.hot-tog button{flex:1;padding:11px;background:var(--surface2);border:none;border-right:1px solid var(--border);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;-webkit-appearance:none}
+.hot-tog button:last-child{border-right:none}
+.hot-tog button.sel{background:rgba(230,51,41,.12);color:var(--accent);font-weight:600}
+.alert-ypf{display:none;background:rgba(245,197,24,.08);border:1px solid rgba(245,197,24,.3);border-radius:10px;padding:14px 16px;margin-top:12px;gap:12px;align-items:flex-start}
+.alert-ypf.show{display:flex}
+.ypf-icon{font-size:22px;flex-shrink:0;margin-top:2px}
+.ypf-text h4{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--yellow);margin-bottom:4px}
+.ypf-text p{font-size:12px;color:#c8a800;line-height:1.5}
+.ypf-tank-btn{background:rgba(245,197,24,.1);border:1px solid rgba(245,197,24,.3);color:var(--yellow);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-appearance:none}
+.ypf-tank-btn.sel{background:rgba(245,197,24,.25);border-color:var(--yellow)}
+.traslado-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px}
+.traslado-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.traslado-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:white;flex-shrink:0}
+.traslado-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text)}
+.traslado-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.pas-tabs{display:flex;margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.pas-tab{flex:1;padding:10px 8px;text-align:center;cursor:pointer;font-size:11px;font-weight:600;color:var(--text2);border-right:1px solid var(--border)}
+.pas-tab:last-child{border-right:none}
+.pas-tab.active{background:rgba(230,51,41,.1);color:var(--accent)}
+.pas-panel{display:none}.pas-panel.active{display:block}
+.noches-badge{display:inline-flex;align-items:center;background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.2);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--green);font-weight:600;margin-left:auto}
+.viat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.viat-item{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:center}
+.viat-item.computed{border-color:rgba(0,212,170,.2);background:rgba(0,212,170,.04)}
+.viat-lbl{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.viat-input{background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text);font-family:'Syne',sans-serif;font-size:15px;font-weight:700;text-align:center;width:100%;outline:none;padding-bottom:3px}
+.viat-input[readonly]{color:var(--green);border-bottom-color:rgba(0,212,170,.3)}
+.viat-auto{font-size:9px;color:var(--green);margin-top:3px}
+.total-bar{background:rgba(230,51,41,.08);border:1px solid rgba(230,51,41,.2);border-radius:10px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.total-lbl{font-size:12px;color:var(--text2)}
+.total-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--accent)}
+.viat-note{font-size:11px;color:var(--text3);margin-top:10px;padding:10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);line-height:1.6}
+.pasajero-item{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:14px;margin-bottom:10px}
+.pasajero-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.pasajero-lbl{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.6px}
+.btn-quitar{background:transparent;border:1px solid var(--border);color:var(--text3);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.no-pas-msg{font-size:12px;color:var(--text3);padding:6px 0}
+.btn-agregar{background:rgba(230,51,41,.1);border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-appearance:none}
+.res-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.res-head{background:rgba(230,51,41,.08);border-bottom:1px solid var(--border);padding:12px 16px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700}
+.res-body{padding:14px 16px}
+.res-row{display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;gap:12px}
+.res-row:last-child{border-bottom:none}
+.res-key{color:var(--text2);flex-shrink:0}
+.res-val{color:var(--text);font-weight:500;text-align:right}
+.mail-prev{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.mail-lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
+.mail-row{font-size:12px;color:var(--text3);margin-bottom:5px}
+.mail-row strong{color:var(--text2)}
+.mail-subj{font-size:13px;font-weight:600;color:var(--text);border-top:1px solid var(--border);padding-top:10px;margin-top:8px}
+.btn-row{display:flex;gap:10px;margin-top:24px;justify-content:flex-end}
+.btn{padding:13px 22px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;display:flex;align-items:center;gap:8px;-webkit-appearance:none;touch-action:manipulation}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text2)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white}
+.btn-send{background:linear-gradient(135deg,#2d8cff,#00b4d8);color:white;font-size:15px;padding:15px 28px}
+.success{display:none;text-align:center;padding:60px 20px}
+.success-icon{width:70px;height:70px;background:rgba(0,212,170,.1);border:2px solid var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 20px}
+.success-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;margin-bottom:8px}
+.success-sub{font-size:13px;color:var(--text2);line-height:1.7}
+.watermark{position:fixed;bottom:12px;left:12px;z-index:999;background:rgba(8,13,20,.85);border:1px solid var(--border);border-radius:8px;padding:5px 12px;display:flex;align-items:center;gap:7px;pointer-events:none}
+.wm-dot{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.wm-name{font-size:10px;color:var(--text2)}.wm-sep{font-size:10px;color:var(--border2)}.wm-role{font-size:10px;color:var(--text3)}
+@media(max-width:560px){.g2{grid-template-columns:1fr}.steps .step-info{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="app-header">
+    <div class="logo-box">
+      <div class="logo-main">pharmexx<span class="logo-dot"></span></div>
+      <div class="logo-sub">Healthcare Solutions</div>
+    </div>
+    <div class="app-title">
+      <h1>Pharmexx Travel</h1>
+      <p>Gesti&oacute;n de Desplazamientos</p>
+    </div>
+    <div class="status-pill">Activo</div>
+  </div>
+  <div class="steps" id="steps-bar">
+    <div class="step active" id="st1"><div class="step-num" id="sn1">1</div><div class="step-info"><span class="step-lbl">Solicitante</span><span class="step-sub">Datos personales</span></div></div>
+    <div class="step" id="st2"><div class="step-num" id="sn2">2</div><div class="step-info"><span class="step-lbl">Traslado</span><span class="step-sub">Origen &middot; Destino</span></div></div>
+    <div class="step" id="st3"><div class="step-num" id="sn3">3</div><div class="step-info"><span class="step-lbl">Alojamiento</span><span class="step-sub">Hotel &middot; Vi&aacute;ticos</span></div></div>
+    <div class="step" id="st4"><div class="step-num" id="sn4">4</div><div class="step-info"><span class="step-lbl">Confirmar</span><span class="step-sub">Revisar &middot; Enviar</span></div></div>
+  </div>
+  <div id="form-wrap">
+    <!-- STEP 1 -->
+    <div class="section active" id="sec1">
+      <div class="sec-title">Datos del Solicitante</div>
+      <div class="card">
+        <div class="card-title"><span class="card-title-left">Informaci&oacute;n personal</span></div>
+        <div class="g2">
+          <div class="field"><label>Nombre y Apellido <span class="req">*</span></label><input type="text" id="f-nombre" placeholder="Ej: Florencia Roasio" autocomplete="off"></div>
+          <div class="field"><label>DNI <span class="req">*</span></label><input type="text" id="f-dni" placeholder="Ej: 32456789" maxlength="10" inputmode="numeric"></div>
+          <div class="field"><label>Fecha de Nacimiento <span class="req">*</span></label><input type="date" id="f-nacimiento"></div>
+          <div class="field"><label>Equipo / Rol <span class="req">*</span></label>
+            <select id="f-equipo"><option value="">Seleccionar equipo</option><option>RTM</option><option>Transferista</option><option>Formaci&oacute;n</option><option>Supervisor</option><option>APM</option></select>
+          </div>
+          <div class="field"><label>Cliente / Cuenta <span class="req">*</span></label>
+            <select id="f-cliente"><option value="">Seleccionar cliente</option><option>L'Or&eacute;al CPD</option><option>L'Or&eacute;al LBD</option></select>
+          </div>
+          <div class="field g-full"><label>Tel&eacute;fono de contacto</label><input type="tel" id="f-tel" placeholder="11 xxxx-xxxx"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-title-left">Pasajeros adicionales</span><button class="btn-agregar" id="btn-agregar">&#43; Agregar pasajero</button></div>
+        <div id="pas-lista"><div class="no-pas-msg" id="no-pas">Sin pasajeros adicionales &mdash; solo viaja el solicitante.</div></div>
+      </div>
+      <div class="btn-row"><button class="btn btn-primary" id="btn-next1">Continuar &rarr;</button></div>
+    </div>
+    <!-- STEP 2 -->
+    <div class="section" id="sec2">
+      <div class="sec-title">Datos del Traslado</div>
+      <div id="traslados-container"></div>
+      <div class="card">
+        <div class="card-title"><span class="card-title-left">Motivo de la gira</span></div>
+        <div class="field"><label>Descripci&oacute;n <span class="req">*</span></label><textarea id="f-motivo" placeholder="Ej: Capacitaci&oacute;n equipo Farmcity C&oacute;rdoba..."></textarea></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="btn-prev2">&larr; Atr&aacute;s</button>
+        <button class="btn btn-primary" id="btn-next2">Continuar &rarr;</button>
+      </div>
+    </div>
+    <!-- STEP 3 -->
+    <div class="section" id="sec3">
+      <div class="sec-title">Alojamiento y Vi&aacute;ticos</div>
+      <div id="aloj-tabs-container"></div>
+      <div id="aloj-panels-container"></div>
+      <div class="card" style="margin-top:4px">
+        <div class="card-title"><span class="card-title-left">Observaciones generales</span></div>
+        <div class="field"><label>Comentarios adicionales</label><textarea id="f-obs" placeholder="Cualquier detalle adicional..."></textarea></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="btn-prev3">&larr; Atr&aacute;s</button>
+        <button class="btn btn-primary" id="btn-next3">Revisar solicitud &rarr;</button>
+      </div>
+    </div>
+    <!-- STEP 4 -->
+    <div class="section" id="sec4">
+      <div class="sec-title">Revisar y Enviar</div>
+      <div class="res-card"><div class="res-head">&#128100; Solicitante</div><div class="res-body" id="res-sol"></div></div>
+      <div class="res-card"><div class="res-head">&#9992; Traslado</div><div class="res-body" id="res-tras"></div></div>
+      <div class="res-card"><div class="res-head">&#127968; Alojamiento y Vi&aacute;ticos</div><div class="res-body" id="res-viat"></div></div>
+      <div class="mail-prev">
+        <div class="mail-lbl">&#128231; Vista previa del mail</div>
+        <div class="mail-row"><strong>Para:</strong> <span id="mail-para">--</span></div>
+        <div class="mail-row"><strong>CC:</strong> <span id="mail-cc-preview">--</span></div>
+        <div class="mail-subj" id="mail-subj">Pharmexx Travel &mdash; ...</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="btn-prev4">&larr; Atr&aacute;s</button>
+        <button class="btn btn-send" id="btn-send">&#128231; Abrir mail y enviar</button>
+      </div>
+    </div>
+  </div>
+  <div class="success" id="success">
+    <div class="success-icon">&#10003;</div>
+    <div class="success-title">&iexcl;Solicitud enviada!</div>
+    <p class="success-sub">Tu cliente de correo se abri&oacute; con la solicitud lista.<br>Revis&aacute; y hac&eacute; click en <strong>Enviar</strong>.</p>
+    <div style="margin-top:28px;display:flex;justify-content:center"><button class="btn btn-ghost" id="btn-reset">&#43; Nueva solicitud</button></div>
+  </div>
+</div>
+<div class="watermark"><div class="wm-dot"></div><span class="wm-name">Diego Ferrandello</span><span class="wm-sep">&middot;</span><span class="wm-role">Operations Manager</span></div>
+<script data-cfasync="false">
+var SHEETS_URL='https://script.google.com/macros/s/AKfycbzl-G8K-M_lSp16ZndIa8Tm0OU405m_LU2h2lfH_fxR91l42kgWWl6JcEkYQxmmubhEmA/exec';
+var step=1,pasCount=0,pasajeros=[],trasladoData={};
+var REFRIGERIO=35000,MOVILIDAD=15000;
+var MAIL_TO='Agustina.paez'+'@pharmexxarg.com';
+var MAIL_DIEGO='Diego.ferrandello'+'@pharmexxarg.com';
+var MAIL_CANDE='candelaria.cardona'+'@pharmexxarg.com';
+var PROVINCIAS=['Buenos Aires (CABA)','Buenos Aires (GBA Norte)','Buenos Aires (GBA Sur)','Buenos Aires (GBA Oeste)','Buenos Aires (Interior)','Catamarca','Chaco','Chubut','\u00d3rdoba (Capital)','C\u00f3rdoba (Interior)','Corrientes','Entre R\u00edos','Formosa','Jujuy','La Pampa','La Rioja','Mendoza','Misiones','Neuqu\u00e9n','R\u00edo Negro','Salta','San Juan','San Luis','Santa Cruz','Santa Fe','Santiago del Estero','Tierra del Fuego','Tucum\u00e1n'];
+
+function gv(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+function fmt(n){return Math.round(n||0).toLocaleString('es-AR');}
+function fmtDate(d){if(!d)return'\u2014';var p=d.split('-'),m=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return p[2]+' '+m[parseInt(p[1])-1]+' '+p[0];}
+function row(k,v){return '<div class="res-row"><span class="res-key">'+k+'</span><span class="res-val">'+v+'</span></div>';}
+
+function setStep(n){
+  for(var i=1;i<=4;i++){
+    document.getElementById('sec'+i).className='section'+(i===n?' active':'');
+    document.getElementById('st'+i).className='step'+(i===n?' active':i<n?' done':'');
+    document.getElementById('sn'+i).textContent=i<n?'\u2713':String(i);
+  }
+  step=n;window.scrollTo(0,0);
+}
+
+function markErr(id){var e=document.getElementById(id);if(e){e.style.borderColor='#e63329';e.focus();setTimeout(function(){e.style.borderColor='';},2500);}}
+
+function v1(){
+  if(!gv('f-nombre')){markErr('f-nombre');return false;}
+  if(!gv('f-dni')){markErr('f-dni');return false;}
+  if(!gv('f-nacimiento')){markErr('f-nacimiento');return false;}
+  if(!gv('f-equipo')){markErr('f-equipo');return false;}
+  if(!gv('f-cliente')){markErr('f-cliente');return false;}
+  return true;
+}
+
+function v2(){
+  var pids=['sol'].concat(pasajeros);
+  for(var i=0;i<pids.length;i++){
+    var pid=pids[i],pre='t-'+pid+'-';
+    var nm=pid==='sol'?gv('f-nombre'):'Pasajero '+pid;
+    var oEl=document.getElementById(pre+'origen'),dEl=document.getElementById(pre+'destino');
+    var fsEl=document.getElementById(pre+'fsalida'),frEl=document.getElementById(pre+'fregreso');
+    if(!oEl||!oEl.value){alert('Completá el origen de '+nm);if(oEl)oEl.focus();return false;}
+    if(!dEl||!dEl.value){alert('Completá el destino de '+nm);if(dEl)dEl.focus();return false;}
+    if(!fsEl||!fsEl.value){alert('Completá fecha de salida de '+nm);if(fsEl)fsEl.focus();return false;}
+    if(!frEl||!frEl.value){alert('Completá fecha de regreso de '+nm);if(frEl)frEl.focus();return false;}
+    var mod=trasladoData[pid]?trasladoData[pid].modalidad:'';
+    if(!mod){alert('Seleccion\u00e1 modalidad de traslado de '+nm);return false;}
+    if(mod==='Auto propio'&&!(trasladoData[pid]&&trasladoData[pid].tank)){alert('Seleccion\u00e1 carga YPF de '+nm);return false;}
+  }
+  if(!gv('f-motivo')){markErr('f-motivo');return false;}
+  return true;
+}
+
+function provOpts(){return PROVINCIAS.map(function(p){return '<option>'+p+'</option>';}).join('');}
+
+function buildTrasladoBlock(pid,nombre,equipo,cliente){
+  var pre='t-'+pid+'-';
+  var h='<div class="traslado-block" id="tblock-'+pid+'">';
+  h+='<div class="traslado-header"><div class="traslado-avatar">'+(pid==='sol'?'S':pid)+'</div>';
+  h+='<div><div class="traslado-name">'+nombre+'</div><div class="traslado-sub">'+equipo+(cliente?' \u00b7 '+cliente:'')+'</div></div></div>';
+  h+='<div class="g2" style="margin-bottom:12px">';
+  h+='<div class="field"><label>Origen <span class="req">*</span></label><select id="'+pre+'origen"><option value="">Seleccionar</option>'+provOpts()+'</select></div>';
+  h+='<div class="field"><label>Destino <span class="req">*</span></label><select id="'+pre+'destino"><option value="">Seleccionar</option>'+provOpts()+'</select></div>';
+  h+='</div>';
+  h+='<div style="margin-bottom:12px"><div style="font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Modalidad <span class="req">*</span></div>';
+  h+='<div class="tog-group" id="mg-'+pid+'">';
+  h+='<button class="tog-btn" data-pid="'+pid+'" data-val="Avion">\u2708\ufe0f Avi\u00f3n</button>';
+  h+='<button class="tog-btn" data-pid="'+pid+'" data-val="Micro / Bus">\uD83D\uDE8C Micro / Bus</button>';
+  h+='<button class="tog-btn" data-pid="'+pid+'" data-val="Auto propio">\uD83D\uDE97 Auto propio</button>';
+  h+='</div>';
+  h+='<div class="alert-ypf" id="aypf-'+pid+'"><div class="ypf-icon">\u26BD</div>';
+  h+='<div class="ypf-text"><h4>\uD83D\uDCCC Tarjeta YPF Ruta habilitada</h4>';
+  h+='<p>Nafta cubierta por la empresa. Seleccion\u00e1 la carga:</p>';
+  h+='<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">';
+  h+='<button class="ypf-tank-btn" data-pid="'+pid+'" data-val="1/2 tanque">\u25b3 1/2 tanque</button>';
+  h+='<button class="ypf-tank-btn" data-pid="'+pid+'" data-val="1 tanque completo">\u25b2 1 tanque completo</button>';
+  h+='<button class="ypf-tank-btn" data-pid="'+pid+'" data-val="1 tanque & medio">\u25b2 1 tanque &amp; medio</button>';
+  h+='<button class="ypf-tank-btn" data-pid="'+pid+'" data-val="2 tanques">\u25b2 2 tanques</button>';
+  h+='</div><div id="tsel-'+pid+'" style="display:none;margin-top:8px;font-size:11px;color:var(--yellow);font-weight:600">\u2713 <span id="ttxt-'+pid+'"></span></div>';
+  h+='</div></div></div>';
+  h+='<div class="g2">';
+  h+='<div class="field"><label>Fecha salida <span class="req">*</span></label><input type="date" id="'+pre+'fsalida"></div>';
+  h+='<div class="field"><label>Horario salida</label><input type="time" id="'+pre+'hsalida"></div>';
+  h+='<div class="field"><label>Fecha regreso <span class="req">*</span></label><input type="date" id="'+pre+'fregreso"></div>';
+  h+='<div class="field"><label>Horario regreso</label><input type="time" id="'+pre+'hregreso"></div>';
+  h+='</div></div>';
+  return h;
+}
+
+function renderTrasladoBlocks(){
+  var c=document.getElementById('traslados-container');
+  c.innerHTML='';
+  c.innerHTML+=buildTrasladoBlock('sol',gv('f-nombre')||'Solicitante',gv('f-equipo'),gv('f-cliente'));
+  for(var i=0;i<pasajeros.length;i++){
+    var pid=pasajeros[i];
+    var pn=document.getElementById('pn-'+pid)?document.getElementById('pn-'+pid).value.trim():'Pasajero '+pid;
+    var pe=document.getElementById('pe-'+pid)?document.getElementById('pe-'+pid).value:'';
+    var pc=document.getElementById('pc-'+pid)?document.getElementById('pc-'+pid).value:'';
+    c.innerHTML+=buildTrasladoBlock(pid,pn||'Pasajero '+pid,pe,pc);
+  }
+  attachTrasladoListeners();
+}
+
+function attachTrasladoListeners(){
+  document.querySelectorAll('.tog-btn[data-pid]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var pid=this.getAttribute('data-pid');
+      document.querySelectorAll('#mg-'+pid+' .tog-btn').forEach(function(b){b.classList.remove('sel');});
+      this.classList.add('sel');
+      if(!trasladoData[pid])trasladoData[pid]={};
+      trasladoData[pid].modalidad=this.getAttribute('data-val');
+      var aEl=document.getElementById('aypf-'+pid);
+      if(aEl)aEl.className=trasladoData[pid].modalidad==='Auto propio'?'alert-ypf show':'alert-ypf';
+      if(trasladoData[pid].modalidad!=='Auto propio'){
+        trasladoData[pid].tank='';
+        document.querySelectorAll('#aypf-'+pid+' .ypf-tank-btn').forEach(function(b){b.classList.remove('sel');});
+        var ts=document.getElementById('tsel-'+pid);if(ts)ts.style.display='none';
+      }
+    });
+  });
+  document.querySelectorAll('.ypf-tank-btn[data-pid]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var pid=this.getAttribute('data-pid');
+      document.querySelectorAll('#aypf-'+pid+' .ypf-tank-btn').forEach(function(b){b.classList.remove('sel');});
+      this.classList.add('sel');
+      if(!trasladoData[pid])trasladoData[pid]={};
+      trasladoData[pid].tank=this.getAttribute('data-val');
+      var txt=document.getElementById('ttxt-'+pid);if(txt)txt.textContent=trasladoData[pid].tank;
+      var sel=document.getElementById('tsel-'+pid);if(sel)sel.style.display='block';
+    });
+  });
+}
+
+function calcNoches(pid){
+  var fs=document.getElementById('t-'+pid+'-fsalida'),fr=document.getElementById('t-'+pid+'-fregreso');
+  if(!fs||!fr||!fs.value||!fr.value)return 0;
+  var d=Math.round((new Date(fr.value)-new Date(fs.value))/(864e5));
+  return d>0?d:0;
+}
+
+function calcViaticos(pid){
+  var n=calcNoches(pid);
+  var badge=document.getElementById('badge-'+pid);if(badge)badge.textContent=n+(n===1?' noche':' noches');
+  var nEl=document.getElementById('a-'+pid+'-noches');if(nEl)nEl.value=n;
+  var esAuto=(trasladoData[pid]&&trasladoData[pid].modalidad==='Auto propio');
+  var hsi=document.getElementById('a-'+pid+'-hsi');
+  var hotelOn=hsi?hsi.classList.contains('sel'):true;
+  var ref=hotelOn?n*REFRIGERIO:0,mov=(hotelOn&&!esAuto)?n*MOVILIDAD:0;
+  var rEl=document.getElementById('a-'+pid+'-ref'),mEl=document.getElementById('a-'+pid+'-mov');
+  var mnEl=document.getElementById('a-'+pid+'-mn'),tEl=document.getElementById('a-'+pid+'-total'),ntEl=document.getElementById('a-'+pid+'-note');
+  if(rEl)rEl.value=hotelOn&&n>0?'$ '+fmt(ref):'';
+  if(mEl)mEl.value=hotelOn&&n>0?(esAuto?'YPF Ruta':'$ '+fmt(mov)):'';
+  if(mnEl){mnEl.textContent=esAuto&&hotelOn&&n>0?'\u26fd Cubierta YPF':'\u25cf Autom\u00e1tico';mnEl.style.color=esAuto?'var(--yellow)':'var(--green)';}
+  if(tEl)tEl.textContent='$ '+fmt(ref+mov);
+  if(ntEl){
+    if(hotelOn&&n>0){ntEl.textContent=n+' noche'+(n>1?'s':'')+' \u00b7 $'+fmt(REFRIGERIO)+'/noche refrig.'+(esAuto?' \u00b7 Movilidad: YPF':' \u00b7 $'+fmt(MOVILIDAD)+'/noche movil.');}
+    else if(!hotelOn){ntEl.textContent='Sin alojamiento solicitado.';}
+    else{ntEl.textContent='Las noches se calculan seg\u00fan fechas de traslado.';}
+  }
+}
+
+function buildAlojPanel(pid,nombre,equipo){
+  var n=calcNoches(pid),p='a-'+pid+'-';
+  var h='<div class="pas-panel" id="apanel-'+pid+'">';
+  h+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px">';
+  h+='<div class="traslado-avatar" style="width:28px;height:28px;font-size:11px">'+(pid==='sol'?'S':pid)+'</div>';
+  h+='<div><div style="font-size:12px;font-weight:700;color:var(--text)">'+nombre+'</div><div style="font-size:10px;color:var(--text2)">'+equipo+'</div></div>';
+  h+='<span class="noches-badge" id="badge-'+pid+'">'+n+(n===1?' noche':' noches')+'</span></div>';
+  h+='<div class="card"><div class="card-title"><span class="card-title-left">Hotel</span></div>';
+  h+='<div class="field" style="margin-bottom:14px"><label>\u00bfRequiere alojamiento?</label>';
+  h+='<div class="hot-tog"><button class="sel" id="'+p+'hsi">\u2713 S\u00ed, requiere hotel</button><button id="'+p+'hno">\u2717 No requiere</button></div></div>';
+  h+='<div id="'+p+'hdet"><div class="g2">';
+  h+='<div class="field"><label>Noches (autom\u00e1tico)</label><input type="text" id="'+p+'noches" value="'+n+'" readonly style="color:var(--green);border-color:rgba(0,212,170,.3)"></div>';
+  h+='<div class="field"><label>Categor\u00eda</label><select id="'+p+'hcat"><option value="">Sin preferencia</option><option>2 estrellas (econ\u00f3mico)</option><option>3 estrellas (est\u00e1ndar)</option><option>4 estrellas (superior)</option></select></div>';
+  h+='<div class="field g-full"><label>Observaciones hotel</label><input type="text" id="'+p+'hobs" placeholder="Ej: Con desayuno, cerca del centro..."></div>';
+  h+='</div></div></div>';
+  h+='<div class="card"><div class="card-title"><span class="card-title-left">Estimaci\u00f3n de vi\u00e1ticos</span></div>';
+  h+='<div class="viat-grid">';
+  h+='<div class="viat-item computed"><div class="viat-lbl">Refrigerio / d\u00eda</div><input class="viat-input" type="text" id="'+p+'ref" readonly><div class="viat-auto">\u25cf Calculado autom\u00e1tico</div></div>';
+  h+='<div class="viat-item computed"><div class="viat-lbl">Movilidad interna</div><input class="viat-input" type="text" id="'+p+'mov" readonly><div class="viat-auto" id="'+p+'mn">\u25cf Calculado autom\u00e1tico</div></div>';
+  h+='</div>';
+  h+='<div class="total-bar"><span class="total-lbl">Total estimado</span><span class="total-val" id="'+p+'total">$ 0</span></div>';
+  h+='<div class="viat-note" id="'+p+'note">Las noches se calculan seg\u00fan fechas de traslado.</div></div>';
+  h+='</div>';
+  return h;
+}
+
+function renderAlojPanels(){
+  var pids=['sol'].concat(pasajeros);
+  var tc=document.getElementById('aloj-tabs-container'),pc=document.getElementById('aloj-panels-container');
+  if(pids.length>1){
+    var th='<div class="pas-tabs">';
+    pids.forEach(function(pid,i){
+      var nm=pid==='sol'?(gv('f-nombre')||'Solicitante'):(document.getElementById('pn-'+pid)?document.getElementById('pn-'+pid).value.trim()||'Pasajero '+pid:'Pasajero '+pid);
+      th+='<div class="pas-tab'+(i===0?' active':'')+'" data-pid="'+pid+'">'+nm.split(' ')[0]+'</div>';
+    });
+    th+='</div>';tc.innerHTML=th;
+  } else {tc.innerHTML='';}
+  var ph='';
+  pids.forEach(function(pid){
+    var nm=pid==='sol'?(gv('f-nombre')||'Solicitante'):(document.getElementById('pn-'+pid)?document.getElementById('pn-'+pid).value.trim()||'Pasajero '+pid:'Pasajero '+pid);
+    var eq=pid==='sol'?(gv('f-equipo')||''):(document.getElementById('pe-'+pid)?document.getElementById('pe-'+pid).value:'');
+    ph+=buildAlojPanel(pid,nm,eq);
+  });
+  pc.innerHTML=ph;
+  var fp=document.getElementById('apanel-'+pids[0]);if(fp)fp.classList.add('active');
+  document.querySelectorAll('.pas-tab[data-pid]').forEach(function(tab){
+    tab.addEventListener('click',function(){
+      var pid=this.getAttribute('data-pid');
+      document.querySelectorAll('.pas-tab').forEach(function(t){t.classList.remove('active');});
+      document.querySelectorAll('.pas-panel').forEach(function(p){p.classList.remove('active');});
+      this.classList.add('active');
+      var panel=document.getElementById('apanel-'+pid);if(panel)panel.classList.add('active');
+    });
+  });
+  pids.forEach(function(pid){
+    var hsi=document.getElementById('a-'+pid+'-hsi'),hno=document.getElementById('a-'+pid+'-hno'),hd=document.getElementById('a-'+pid+'-hdet');
+    if(hsi)hsi.addEventListener('click',function(){hsi.classList.add('sel');hno.classList.remove('sel');if(hd)hd.style.display='block';calcViaticos(pid);});
+    if(hno)hno.addEventListener('click',function(){hno.classList.add('sel');hsi.classList.remove('sel');if(hd)hd.style.display='none';calcViaticos(pid);});
+    calcViaticos(pid);
+  });
+}
+
+function buildResumen(){
+  var pids=['sol'].concat(pasajeros);
+  // Solicitante
+  var sh=row('Nombre',gv('f-nombre'))+row('DNI',gv('f-dni'))+row('Fecha Nac.',gv('f-nacimiento'))+row('Equipo',gv('f-equipo'))+row('Cliente',gv('f-cliente'))+(gv('f-tel')?row('Tel\u00e9fono',gv('f-tel')):'');
+  if(pasajeros.length>0){
+    sh+='<div class="res-row" style="flex-direction:column;align-items:flex-start;gap:6px"><span class="res-key">Pasajeros adicionales ('+pasajeros.length+')</span>';
+    pasajeros.forEach(function(pid){
+      var pn=document.getElementById('pn-'+pid)?document.getElementById('pn-'+pid).value.trim():'?';
+      var pd=document.getElementById('pd-'+pid)?document.getElementById('pd-'+pid).value.trim():'?';
+      var pe=document.getElementById('pe-'+pid)?document.getElementById('pe-'+pid).value:'';
+      sh+='<div style="font-size:12px;color:var(--text);padding-left:8px;line-height:1.7"><strong>'+pn+'</strong> \u00b7 DNI: '+pd+(pe?' \u00b7 '+pe:'')+'</div>';
+    });
+    sh+='</div>';
+  }
+  document.getElementById('res-sol').innerHTML=sh;
+  // Traslado
+  var th='';
+  pids.forEach(function(pid,ti){
+    var nm=pid==='sol'?gv('f-nombre'):(document.getElementById('pn-'+pid)?document.getElementById('pn-'+pid).value.trim():'Pasajero '+pid);
+    var pre='t-'+pid+'-';
+    var ori=document.getElementById(pre+'origen')?document.getElementById(pre+'origen').value:'?';
+    var dst=document.getElementById(pre+'destino')?document.getElementById(pre+'destino').value:'?';
+    var fs=document.getElementById(pre+'fsalida')?document.getElementById(pre+'fsalida').value:'';
+    var fr=document.getElementById(pre+'fregreso')?document.getElementById(pre+'fregreso').value:'';
+    var hs=document.getElementById(pre+'hsalida')?document.getElementById(pre+'hsalida').value:'';
+    var hr=document.getElementById(pre+'hregreso')?document.getElementById(pre+'hregreso').value:'';
+    var mod=trasladoData[pid]?trasladoData[pid].modalidad:'?';
+    var tank=trasladoData[pid]?trasladoData[pid].tank:'';
+    var isAuto=mod==='Auto propio';
+    th+='<div style="margin-bottom:'+(ti<pids.length-1?'14px;padding-bottom:14px;border-bottom:1px solid var(--border)':'0')+'">';
+    th+='<div style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">'+nm+'</div>';
+    th+=row('Origen \u2192 Destino',ori+' \u2192 '+dst);
+    th+=row('Modalidad',mod+(isAuto?' \u00b7 YPF Ruta':''));
+    if(isAuto&&tank)th+=row('Carga YPF',tank);
+    th+=row('Salida',fmtDate(fs)+(hs?' \u00b7 '+hs:''));
+    th+=row('Regreso',fmtDate(fr)+(hr?' \u00b7 '+hr:''));
+    th+='</div>';
+  });
+  th+=row('Motivo',gv('f-motivo'));
+  document.getElementById('res-tras').innerHTML=th;
+  // Viaticos
+  var vh='',gTotal=0;
+  pids.forEach(function(pid,vi){
+    var nm=pid==='sol'?gv('f-nombre'):(document.getElementById('pn-'+pid)?document.getElementById('pn-'+pid).value.trim():'Pasajero '+pid);
+    var p='a-'+pid+'-';
+    var hsi=document.getElementById(p+'hsi');var hotelOn=hsi?hsi.classList.contains('sel'):true;
+    var n=calcNoches(pid),isAuto=(trasladoData[pid]&&trasladoData[pid].modalidad==='Auto propio');
+    var hcat=(document.getElementById(p+'hcat')||{}).value||'Sin preferencia';
+    var ref=hotelOn?n*REFRIGERIO:0,mov=(hotelOn&&!isAuto)?n*MOVILIDAD:0,tot=ref+mov;
+    gTotal+=tot;
+    vh+='<div style="margin-bottom:'+(vi<pids.length-1?'14px;padding-bottom:14px;border-bottom:1px solid var(--border)':'0')+'">';
+    vh+='<div style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">'+nm+'</div>';
+    vh+=row('Hotel',hotelOn?'S\u00ed \u00b7 '+n+' noches \u00b7 '+hcat:'No requiere');
+    vh+=row('Refrigerio ('+n+' noches)','$ '+fmt(ref));
+    vh+=row('Movilidad',isAuto?'YPF Ruta':'$ '+fmt(mov));
+    vh+=row('Subtotal','<strong>$ '+fmt(tot)+'</strong>');
+    vh+='</div>';
+  });
+  vh+='<div class="res-row"><span class="res-key" style="font-weight:700;color:var(--text)">TOTAL GENERAL</span><span class="res-val" style="color:var(--accent);font-weight:800;font-size:15px">$ '+fmt(gTotal)+'</span></div>';
+  if(gv('f-obs'))vh+=row('Observaciones',gv('f-obs'));
+  document.getElementById('res-viat').innerHTML=vh;
+  // Mail preview
+  var hayAuto=Object.keys(trasladoData).some(function(k){return trasladoData[k]&&trasladoData[k].modalidad==='Auto propio';});
+  var ccTxt=MAIL_DIEGO+(hayAuto?'; '+MAIL_CANDE:'');
+  document.getElementById('mail-para').textContent=MAIL_TO;
+  document.getElementById('mail-cc-preview').textContent=ccTxt;
+  var nombres=[gv('f-nombre')];
+  pasajeros.forEach(function(pid){var pn=document.getElementById('pn-'+pid);if(pn&&pn.value.trim())nombres.push(pn.value.trim().split(' ')[0]);});
+  document.getElementById('mail-subj').textContent='[Pharmexx Travel] '+nombres.join(', ')+' \u00b7 '+fmtDate(gv('t-sol-fsalida'));
+}
+
+function buildMailBody(){
+  var pids=['sol'].concat(pasajeros);
+  var b='PHARMEXX TRAVEL - SOLICITUD DE GIRA\n=====================================\n\n';
+  b+='SOLICITANTE\nNombre: '+gv('f-nombre')+'\nDNI: '+gv('f-dni')+'\nFecha Nac: '+gv('f-nacimiento')+'\nEquipo: '+gv('f-equipo')+'\nCliente: '+gv('f-cliente')+'\nTel: '+(gv('f-tel')||'\u2014')+'\n';
+  if(pasajeros.length>0){
+    b+='\nPASAJEROS ADICIONALES\n';
+    pasajeros.forEach(function(pid,i){
+      var pn=document.getElementById('pn-'+pid)?document.getElementById('pn-'+pid).value.trim():'?';
+      var pd=document.getElementById('pd-'+pid)?document.getElementById('pd-'+pid).value.trim():'?';
+      var pe=document.getElementById('pe-'+pid)?document.getElementById('pe-'+pid).value:'';
+      b+=(i+1)+'. '+pn+' \u00b7 DNI: '+pd+(pe?' \u00b7 '+pe:'')+'\n';
+    });
+  }
+  b+='\nTRASLADO POR PASAJERO\n';
+  pids.forEach(function(pid){
+    var nm=pid==='sol'?gv('f-nombre'):(document.getElementById('pn-'+pid)?document.getElementById('pn-'+pid).value.trim():'Pasajero '+pid);
+    var pre='t-'+pid+'-';
+    var mod=trasladoData[pid]?trasladoData[pid].modalidad:'?';
+    var tank=trasladoData[pid]?trasladoData[pid].tank:'';
+    var isAuto=mod==='Auto propio';
+    b+='\n['+nm+']\n';
+    b+='Origen: '+(document.getElementById(pre+'origen')?document.getElementById(pre+'origen').value:'?')+'\n';
+    b+='Destino: '+(document.getElementById(pre+'destino')?document.getElementById(pre+'destino').value:'?')+'\n';
+    b+='Modalidad: '+mod+(isAuto?' (YPF Ruta habilitada)':'')+'\n';
+    if(isAuto&&tank)b+='Carga YPF: '+tank+'\n';
+    var fs=document.getElementById(pre+'fsalida')?document.getElementById(pre+'fsalida').value:'';
+    var fr=document.getElementById(pre+'fregreso')?document.getElementById(pre+'fregreso').value:'';
+    var hs=document.getElementById(pre+'hsalida')?document.getElementById(pre+'hsalida').value:'';
+    var hr=document.getElementById(pre+'hregreso')?document.getElementById(pre+'hregreso').value:'';
+    b+='Salida: '+fmtDate(fs)+(hs?' \u00b7 '+hs:'')+'\nRegreso: '+fmtDate(fr)+(hr?' \u00b7 '+hr:'')+'\n';
+  });
+  b+='\nMOTIVO\n'+gv('f-motivo')+'\n\nVIATICOS ESTIMADOS\n';
+  var gTotal=0;
+  pids.forEach(function(pid){
+    var nm=pid==='sol'?gv('f-nombre'):(document.getElementById('pn-'+pid)?document.getElementById('pn-'+pid).value.trim():'Pasajero '+pid);
+    var p='a-'+pid+'-';
+    var hsi=document.getElementById(p+'hsi');var hotelOn=hsi?hsi.classList.contains('sel'):true;
+    var n=calcNoches(pid),isAuto=(trasladoData[pid]&&trasladoData[pid].modalidad==='Auto propio');
+    var ref=hotelOn?n*REFRIGERIO:0,mov=(hotelOn&&!isAuto)?n*MOVILIDAD:0,tot=ref+mov;
+    gTotal+=tot;
+    b+='\n['+nm+']\nHotel: '+(hotelOn?'Si \u00b7 '+n+' noches':'No')+'\nRefrigerio: $ '+fmt(ref)+'\nMovilidad: '+(isAuto?'YPF Ruta':'$ '+fmt(mov))+'\nSubtotal: $ '+fmt(tot)+'\n';
+  });
+  b+='\nTOTAL GENERAL: $ '+fmt(gTotal)+'\n';
+  if(gv('f-obs'))b+='\nOBSERVACIONES\n'+gv('f-obs')+'\n';
+  b+='\n---\nGenerado por Pharmexx Travel \u00b7 '+new Date().toLocaleDateString('es-AR');
+  return b;
+}
+
+// ── LISTENERS ─────────────────────────────────────────────────────────────────
+document.getElementById('btn-next1').addEventListener('click',function(){if(v1()){renderTrasladoBlocks();setStep(2);}});
+document.getElementById('btn-prev2').addEventListener('click',function(){setStep(1);});
+document.getElementById('btn-next2').addEventListener('click',function(){if(v2()){renderAlojPanels();setStep(3);}});
+document.getElementById('btn-prev3').addEventListener('click',function(){setStep(2);});
+document.getElementById('btn-next3').addEventListener('click',function(){buildResumen();setStep(4);});
+document.getElementById('btn-prev4').addEventListener('click',function(){setStep(3);});
+
+document.getElementById('btn-send').addEventListener('click',function(){
+  var hayAuto=Object.keys(trasladoData).some(function(k){return trasladoData[k]&&trasladoData[k].modalidad==='Auto propio';});
+  var cc=MAIL_DIEGO+(hayAuto?';'+MAIL_CANDE:'');
+  var nombres=[gv('f-nombre')];
+  pasajeros.forEach(function(pid){var pn=document.getElementById('pn-'+pid);if(pn&&pn.value.trim())nombres.push(pn.value.trim().split(' ')[0]);});
+  var subj=encodeURIComponent('[Pharmexx Travel] '+nombres.join(', ')+' \u00b7 '+gv('f-equipo')+' \u00b7 '+fmtDate(gv('t-sol-fsalida')));
+  var body=encodeURIComponent(buildMailBody());
+  // Registrar en Google Sheets
+  try {
+    var pid0 = 'sol';
+    console.log('DEBUG origen:', document.getElementById('t-sol-origen') ? document.getElementById('t-sol-origen').value : 'ELEMENTO NO ENCONTRADO');
+    console.log('DEBUG destino:', document.getElementById('t-sol-destino') ? document.getElementById('t-sol-destino').value : 'ELEMENTO NO ENCONTRADO');
+    var fsalida  = document.getElementById('t-sol-fsalida')  ? document.getElementById('t-sol-fsalida').value  : '';
+    var fregreso = document.getElementById('t-sol-fregreso') ? document.getElementById('t-sol-fregreso').value : '';
+    var destino  = document.getElementById('t-sol-destino')  ? document.getElementById('t-sol-destino').value  : '';
+    var origen   = document.getElementById('t-sol-origen')   ? document.getElementById('t-sol-origen').value   : '';
+    var noches   = calcNoches('sol') > 0 ? calcNoches('sol') : '';
+    var modalidad = trasladoData['sol'] ? trasladoData['sol'].modalidad : '';
+    var carga_ypf = trasladoData['sol'] ? (trasladoData['sol'].tank||'') : '';
+    var pasList = pasajeros.map(function(pid){
+      var pn = document.getElementById('pn-'+pid);
+      return pn ? pn.value.trim() : 'Pasajero '+pid;
+    }).join(', ');
+    var payload = {
+      nombre:        gv('f-nombre'),
+      dni:           gv('f-dni'),
+      nacimiento:    gv('f-nacimiento'),
+      equipo:        gv('f-equipo'),
+      cliente:       gv('f-cliente'),
+      telefono:      gv('f-tel')||'',
+      motivo:        gv('f-motivo')||'',
+      destino:       destino,
+      origen:        origen,
+      modalidad:     modalidad,
+      carga_ypf:     carga_ypf,
+      fecha_salida:  fsalida,
+      fecha_regreso: fregreso,
+      noches:        noches,
+      pasajeros:     pasList
+    };
+    fetch(SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+  } catch(e) { console.warn('Registro Sheets:', e); }
+  window.location.href='mailto:'+MAIL_TO+'?cc='+cc+'&subject='+subj+'&body='+body;
+  setTimeout(function(){
+    document.getElementById('form-wrap').style.display='none';
+    document.getElementById('steps-bar').style.display='none';
+    document.getElementById('success').style.display='block';
+  },600);
+});
+
+document.getElementById('btn-reset').addEventListener('click',function(){
+  document.getElementById('form-wrap').style.display='block';
+  document.getElementById('steps-bar').style.display='flex';
+  document.getElementById('success').style.display='none';
+  document.querySelectorAll('input,select,textarea').forEach(function(el){el.value='';});
+  document.getElementById('pas-lista').querySelectorAll('.pasajero-item').forEach(function(el){el.remove();});
+  document.getElementById('no-pas').style.display='block';
+  document.getElementById('traslados-container').innerHTML='';
+  document.getElementById('aloj-tabs-container').innerHTML='';
+  document.getElementById('aloj-panels-container').innerHTML='';
+  pasajeros=[];pasCount=0;trasladoData={};
+  setStep(1);
+});
+
+document.getElementById('btn-agregar').addEventListener('click',function(){
+  pasCount++;
+  var id=pasCount;
+  pasajeros.push(id);
+  document.getElementById('no-pas').style.display='none';
+  var lista=document.getElementById('pas-lista');
+  var div=document.createElement('div');
+  div.className='pasajero-item';
+  div.id='pas-'+id;
+  var h='<div class="pasajero-header"><span class="pasajero-lbl">Pasajero '+id+'</span>';
+  h+='<button class="btn-quitar" id="quitar-'+id+'">\u2715 Quitar</button></div>';
+  h+='<div class="g2">';
+  h+='<div class="field"><label>Nombre y Apellido</label><input type="text" id="pn-'+id+'" placeholder="Nombre completo" autocomplete="off"></div>';
+  h+='<div class="field"><label>DNI</label><input type="text" id="pd-'+id+'" placeholder="Ej: 32456789" maxlength="10" inputmode="numeric"></div>';
+  h+='<div class="field"><label>Equipo / Rol</label><select id="pe-'+id+'"><option value="">Seleccionar</option><option>RTM</option><option>Transferista</option><option>Formaci\u00f3n</option><option>Supervisor</option></select></div>';
+  h+='<div class="field"><label>Cliente / Cuenta</label><select id="pc-'+id+'"><option value="">Seleccionar</option><option>L\u2019Or\u00e9al CPD</option><option>L\u2019Or\u00e9al LBD</option></select></div>';
+  h+='<div class="field g-full"><label>Tel\u00e9fono</label><input type="tel" id="ptel-'+id+'" placeholder="11 xxxx-xxxx"></div>';
+  h+='</div>';
+  div.innerHTML=h;
+  lista.appendChild(div);
+  document.getElementById('quitar-'+id).addEventListener('click',function(){
+    div.remove();
+    pasajeros=pasajeros.filter(function(x){return x!==id;});
+    if(pasajeros.length===0)document.getElementById('no-pas').style.display='block';
+  });
+});
+</script>
+</body>
+</html>
